@@ -9,7 +9,7 @@ final class ListarTareas
 {
     public function __construct(private PDO $pdo) {}
 
-    public function ejecutar(?string $estado = null, ?string $prioridad = null): array
+    public function ejecutar(?string $estado = null, ?string $prioridad = null, ?string $titulo = null): array
     {
         $condiciones = [];
         $parametros = [];
@@ -21,6 +21,10 @@ final class ListarTareas
         if ($prioridad !== null && $prioridad !== '') {
             $condiciones[] = 'prioridad = :prioridad';
             $parametros[':prioridad'] = $prioridad;
+        }
+        if ($titulo !== null && trim($titulo) !== '') {
+            $condiciones[] = 'titulo LIKE :titulo';
+            $parametros[':titulo'] = '%' . trim($titulo) . '%';
         }
 
         $sql = 'SELECT * FROM tareas';
@@ -34,4 +38,3 @@ final class ListarTareas
         return $stmt->fetchAll();
     }
 }
-
